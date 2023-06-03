@@ -1,0 +1,8 @@
+<h1>Add direct report</h1>
+
+<%= simple_form_for @supervision do |f| %>
+  <%= f.input :manager, label: 'Manager email' %>
+  <%= f.input :direct_report, label: 'Direct report email' %>
+
+  <%= f.submit 'Create', class: 'btn btn-primary' %>
+<% end %>

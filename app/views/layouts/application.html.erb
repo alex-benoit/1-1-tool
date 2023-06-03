@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Zoey</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <div class="d-flex">
+      <% if user_signed_in? %>
+        <%= render "shared/sidebar" %>
+      <% end %>
+
+      <main class="container">
+        <%= render "shared/flashes" %>
+        <div class="row justify-content-center">
+          <div class="col-8 pt-4">
+            <%= yield %>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

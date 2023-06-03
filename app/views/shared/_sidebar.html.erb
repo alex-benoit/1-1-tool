@@ -1,0 +1,39 @@
+<div id="sidebar" class="p-3">
+  <h6><i class="fa-regular fa-comments"></i> Zoey</h6>
+
+  <hr>
+
+  <p class="mb-1"><i class="fa-regular fa-comment-dots"></i> 1:1s</p>
+
+  <% if current_user.managers.any? %>
+    <p class="mb-1">Manager</p>
+    <ul>
+      <% current_user.manager_supervisions.each do |supervision| %>
+        <li><%= link_to supervision.manager.email, supervision_path(supervision) %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <% if current_user.direct_reports.any? %>
+    <p class="mb-1">Direct reports (<%= current_user.direct_reports.count %>)</p>
+    <ul>
+      <% current_user.direct_report_supervisions.each do |supervision| %>
+        <li><%= link_to supervision.direct_report.email, supervision_path(supervision) %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <%= link_to '+ Add 1:1', new_supervision_path %>
+
+  <hr>
+
+  <%= link_to root_path do %>
+    <i class="fa-solid fa-sliders"></i> Settings
+  <% end %>
+
+  <hr>
+
+  <p class="mb-0"><%= current_user.email %></p>
+  <p class="mb-0"><%= link_to 'logout', destroy_user_session_path, 'data-turbo-method': :delete %></p>
+</div>
+
