@@ -7,8 +7,8 @@ services:
     buildCommand: bundle install; bundle exec rake assets:precompile; bundle exec rake assets:clean; bundle exec rake db:migrate
     startCommand: bundle exec puma -C config/puma.rb
     autoDeploy: true
-    # domains:
-    #   - 'zoey.so'
+    domains:
+      - 'www.zoey.so'
     envVars:
       - key: DATABASE_URL
         fromDatabase:
