@@ -1,4 +1,4 @@
-<h1><%= @supervision.manager.email %><><%= @supervision.direct_report.email %></h1>
+<h1><%= @supervision.manager.name %><><%= @supervision.direct_report.name %> 1:1</h1>
 
 <p class="mb-0">Goals</p>
 <p>List of Goals (title, status, date, auto score, list of kpis, score)</p>
@@ -14,7 +14,6 @@
 
 <p class="mb-0">Commitments</p>
 <p>List of commitments</p>
-
 
 <% if @supervision.direct_report.priorities.any? %>
   <ul class="list-group">
