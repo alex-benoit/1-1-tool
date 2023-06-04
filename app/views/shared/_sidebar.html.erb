@@ -9,7 +9,7 @@
     <p class="mb-1">Manager</p>
     <ul>
       <% current_user.manager_supervisions.each do |supervision| %>
-        <li><%= link_to supervision.manager.email, supervision_path(supervision) %></li>
+        <li><%= link_to supervision.manager.name, supervision_path(supervision) %></li>
       <% end %>
     </ul>
   <% end %>

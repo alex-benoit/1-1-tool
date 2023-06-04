@@ -1,11 +1,12 @@
-<h1>Add direct report</h1>
+<h1>Add 1:1</h1>
 
 <%= simple_form_for @supervision do |f| %>
-  <%= simple_fields_for @supervision.direct_report do |ff| %>
+  <h6>Direct report information</h6>
+  <%= f.simple_fields_for @direct_report do |ff| %>
     <%= ff.input :name %>
     <%= ff.input :email %>
     <%= ff.input :description, required: false, as: :text %>
   <% end %>
 
-  <%= f.submit 'Add direct report', class: 'btn btn-primary' %>
+  <%= f.submit 'Add 1:1', class: 'btn btn-primary' %>
 <% end %>

@@ -8,21 +8,22 @@ class SupervisionsController < ApplicationController
 
   def new
     @supervision = Supervision.new
+    @direct_report = User.new
   end
 
   def create
-    manager = find_or_create(email: supervision_params[:manager])
-    direct_report = find_or_create(email: supervision_params[:direct_report])
+    direct_report = User.find_or_create_by!(email: supervision_params[:user][:email])
+    direct_report.update!(supervision_params[:user])
 
-    Supervision.create(manager:, direct_report:)
+    current_user.direct_report_supervisions.create!(direct_report:)
 
-    redirect_to settings_path
+    redirect_to root_path
   end
 
   private
 
   def supervision_params
-    params.require(:supervision).permit(:manager, :direct_report)
+    params.require(:supervision).permit(user: %i[name email description])
   end
 
   def find_or_create(email:)

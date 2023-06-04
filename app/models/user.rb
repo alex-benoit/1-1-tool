@@ -13,4 +13,6 @@ class User < ApplicationRecord
   has_many :managers, through: :manager_supervisions
 
   has_many :priorities, dependent: :destroy
+
+  validates :name, :email, presence: true
 end
