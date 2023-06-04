@@ -1,0 +1,33 @@
+require:
+  - rubocop-performance
+  - rubocop-rails
+
+AllCops:
+  NewCops: enable
+  Exclude:
+    - bin/**/*
+    - db/schema.rb
+    - db/migrate/*
+    - tmp/**/*
+    - log/**/*
+    - vendor/**/*
+    - config/**/*
+    - Rakefile
+
+Layout/LineLength:
+  Enabled: false
+Metrics/AbcSize:
+  Max: 26
+
+Style/Documentation:
+  Enabled: false
+Style/ClassAndModuleChildren:
+  Enabled: false
+Rails/EnvironmentVariableAccess:
+  AllowReads: true
+Rails/I18nLocaleTexts:
+  Enabled: false
+Style/IfUnlessModifier:
+  Enabled: false
+Layout/FirstHashElementIndentation:
+  Enabled: false

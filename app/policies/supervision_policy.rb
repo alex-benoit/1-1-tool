@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SupervisionPolicy
   attr_reader :user, :supervision
 

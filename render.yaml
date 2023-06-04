@@ -27,3 +27,7 @@ envVarGroups:
         generateValue: true
       - key: OPENAI_TOKEN
         sync: false
+      - key: NEWRELIC_INGEST_KEY
+        sync: false
+      - key: NEWRELIC_ACCOUNT_NUMBER
+        sync: false
