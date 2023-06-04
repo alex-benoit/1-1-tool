@@ -1,0 +1,5 @@
+<li class="list-group-item list-group-item-action d-flex">
+  <%= hidden_field_tag "checkin[previous_priorities_attributes][#{priority.id}][completed]", false %>
+  <%= check_box_tag "checkin[previous_priorities_attributes][#{priority.id}][completed]", true, priority.completed_at.nil?, class: 'form-check-input me-2', id: "priority-#{priority.id}", style: 'flex: none' %>
+  <label class="form-check-label stretched-link" for="priority-<%= priority.id %>"><%= priority.title %></label>
+</li>

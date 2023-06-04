@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_04_014025) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_04_071858) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -30,20 +30,32 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_04_014025) do
     t.string "title"
     t.datetime "completed_at"
     t.datetime "archived_at"
-    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_priorities_on_user_id"
+    t.bigint "checkin_id"
+    t.index ["checkin_id"], name: "index_priorities_on_checkin_id"
   end
 
-  create_table "supervisions", force: :cascade do |t|
+  create_table "relationships", force: :cascade do |t|
     t.bigint "manager_id", null: false
     t.bigint "direct_report_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["direct_report_id"], name: "index_supervisions_on_direct_report_id"
-    t.index ["manager_id", "direct_report_id"], name: "index_supervisions_on_manager_id_and_direct_report_id", unique: true
-    t.index ["manager_id"], name: "index_supervisions_on_manager_id"
+    t.index ["direct_report_id"], name: "index_relationships_on_direct_report_id"
+    t.index ["manager_id", "direct_report_id"], name: "index_relationships_on_manager_id_and_direct_report_id", unique: true
+    t.index ["manager_id"], name: "index_relationships_on_manager_id"
+  end
+
+  create_table "topics", force: :cascade do |t|
+    t.string "title"
+    t.bigint "relationship_id", null: false
+    t.datetime "completed_at"
+    t.datetime "archived_at"
+    t.bigint "author_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_topics_on_author_id"
+    t.index ["relationship_id"], name: "index_topics_on_relationship_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -61,7 +73,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_04_014025) do
   end
 
   add_foreign_key "checkins", "users"
-  add_foreign_key "priorities", "users"
-  add_foreign_key "supervisions", "users", column: "direct_report_id"
-  add_foreign_key "supervisions", "users", column: "manager_id"
+  add_foreign_key "priorities", "checkins"
+  add_foreign_key "relationships", "users", column: "direct_report_id"
+  add_foreign_key "relationships", "users", column: "manager_id"
+  add_foreign_key "topics", "relationships"
+  add_foreign_key "topics", "users", column: "author_id"
 end

@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   get 'error', to: 'pages#error'
 
-  resources :supervisions, only: %i[new create show]
+  resources :relationships, only: %i[new create show]
 
   resources :checkins, only: %i[new create]
 

@@ -1,6 +1,6 @@
 <h1>Add 1:1</h1>
 
-<%= simple_form_for @supervision do |f| %>
+<%= simple_form_for @relationship do |f| %>
   <h6>Direct report information</h6>
   <%= f.simple_fields_for @direct_report do |ff| %>
     <%= ff.input :name %>

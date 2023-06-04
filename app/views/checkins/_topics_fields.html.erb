@@ -1,0 +1,17 @@
+<%= checkin_form.simple_fields_for relationship, index: relationship.id do |relationship_form| %>
+  <%= relationship_form.simple_fields_for 'topics_attributes', topic, index: topic.new_record? ? '_topic_id_placeholder_' : topic.id do |topic_form| %>
+    <div>
+      <% if topic.persisted? %>
+        <%= topic_form.hidden_field :_destroy, value: 0 %>
+        <%= topic_form.hidden_field :id, value: topic.id %>
+      <% end %>
+
+      <div class="input-group mb-2 topic-wrapper <%= 'persisted' if topic.persisted? %>">
+        <%= topic_form.input :title, label: false, wrapper: false %>
+        <button class="btn btn-outline-secondary" type="button" data-action="new-checkin#closeParent" data-wrapper-selector=".topic-wrapper">
+          <i class="fa-regular fa-trash-can"></i>
+        </button>
+      </div>
+    </div>
+  <% end %>
+<% end %>

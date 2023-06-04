@@ -3,17 +3,22 @@
 
   <hr>
 
-  <p class="mb-1"><i class="fa-regular fa-comment-dots"></i> 1:1s</p>
+  <p class="mb-1">
+    <i class="fa-regular fa-comment-dots"></i>
+    <span> 1:1s</span>
+    <% unless current_user.checkins.last && current_user.checkins.last.created_at > 4.days.ago %>
+     <span>- <%= link_to 'prepare', new_checkin_path %></span>
+    <% end %>
+  </p>
 
   <% if current_user.managers.any? %>
+
+
     <p class="mb-1">Manager</p>
     <ul>
-      <% current_user.manager_supervisions.each do |supervision| %>
+      <% current_user.manager_relationships.each do |relationship| %>
         <li>
-          <%= link_to supervision.manager.name, supervision_path(supervision) %>
-          <% unless current_user.checkins.last && current_user.checkins.created_at > 4.days.ago %>
-           <span> - <%= link_to 'prepare', new_checkin_path %></span>
-          <% end %>
+          <%= link_to relationship.manager.name, relationship_path(relationship) %>
         </li>
       <% end %>
     </ul>
@@ -22,13 +27,13 @@
   <% if current_user.direct_reports.any? %>
     <p class="mb-1">Direct reports (<%= current_user.direct_reports.count %>)</p>
     <ul>
-      <% current_user.direct_report_supervisions.each do |supervision| %>
-        <li><%= link_to supervision.direct_report.name, supervision_path(supervision) %></li>
+      <% current_user.direct_report_relationships.each do |relationship| %>
+        <li><%= link_to relationship.direct_report.name, relationship_path(relationship) %></li>
       <% end %>
     </ul>
   <% end %>
 
-  <%= link_to '+ Add 1:1', new_supervision_path %>
+  <%= link_to '+ Add 1:1', new_relationship_path %>
 
   <hr>
 

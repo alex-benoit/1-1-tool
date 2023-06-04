@@ -1,0 +1,15 @@
+<%= checkin_form.simple_fields_for 'priorities_attributes', priority, index: priority.new_record? ? '_priority_id_placeholder_' : priority.id do |priority_form| %>
+  <div>
+    <% if priority.persisted? %>
+      <%= priority_form.hidden_field :_destroy, value: 0 %>
+      <%= priority_form.hidden_field :id, value: priority.id %>
+    <% end %>
+
+    <div class="input-group mb-2 priority-wrapper <%= 'persisted' if priority.persisted? %>">
+      <%= priority_form.input :title, label: false, wrapper: false %>
+      <button class="btn btn-outline-secondary" type="button" data-action="new-checkin#closeParent" data-wrapper-selector=".priority-wrapper">
+        <i class="fa-regular fa-trash-can"></i>
+      </button>
+    </div>
+  </div>
+<% end %>
