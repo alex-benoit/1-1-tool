@@ -2,4 +2,8 @@
 
 class PagesController < ApplicationController
   def settings; end
+
+  def error
+    raise
+  end
 end

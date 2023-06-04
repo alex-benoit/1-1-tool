@@ -9,7 +9,12 @@
     <p class="mb-1">Manager</p>
     <ul>
       <% current_user.manager_supervisions.each do |supervision| %>
-        <li><%= link_to supervision.manager.name, supervision_path(supervision) %></li>
+        <li>
+          <%= link_to supervision.manager.name, supervision_path(supervision) %>
+          <% unless current_user.checkins.last && current_user.checkins.created_at > 4.days.ago %>
+           <span> - <%= link_to 'prepare', new_checkin_path %></span>
+          <% end %>
+        </li>
       <% end %>
     </ul>
   <% end %>

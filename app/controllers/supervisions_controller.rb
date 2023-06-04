@@ -12,7 +12,7 @@ class SupervisionsController < ApplicationController
   end
 
   def create
-    direct_report = User.find_or_create_by!(email: supervision_params[:user][:email])
+    direct_report = find_or_create(email: supervision_params[:user][:email])
     direct_report.update!(supervision_params[:user])
 
     current_user.direct_report_supervisions.create!(direct_report:)
@@ -27,6 +27,11 @@ class SupervisionsController < ApplicationController
   end
 
   def find_or_create(email:)
-    User.find_by(email:) || User.create(email:, password: SecureRandom.alphanumeric(12))
+    user = User.find_by(email:)
+    if user
+      user.update(supervision_params[:user])
+    else
+      User.create(supervision_params[:user].merge(password: SecureRandom.alphanumeric(12)))
+    end
   end
 end

@@ -14,5 +14,7 @@ class User < ApplicationRecord
 
   has_many :priorities, dependent: :destroy
 
+  has_many :checkins, dependent: :destroy
+
   validates :name, :email, presence: true
 end

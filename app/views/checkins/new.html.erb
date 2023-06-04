@@ -1,0 +1,103 @@
+<h1>Welcome back, <%= current_user.name %> 👋</h1>
+
+<p>Let’s help you prepare for your next 1:1!</p>
+
+<%= simple_form_for @checkin, data: { controller: 'new-checkin' } do |f| %>
+  <div class="form-inputs">
+    <div class="card p-3 mb-3">
+      <div class="card-body">
+        <label class="form-label fs-5">How did you feel at work this week? *</label>
+
+        <div class="btn-group d-flex" role="morale-group">
+          <% 7.times do |i| %>
+            <input type="radio" class="btn-check" name="checkin[morale]" required id="morale-<%= i + 1 %>" value="<%= i + 1 %>" autocomplete="off">
+            <label class="btn btn-outline-primary fs-4" for="morale-<%= i + 1 %>"><%= i + 1 %></label>
+          <% end %>
+        </div>
+
+        <div class="d-flex justify-content-between">
+          <span>Awful</span>
+          <span>Amazing</span>
+        </div>
+
+        <p class="mb-0 mt-3"><%= link_to 'What made you feel this way?', '#', data: { action: 'new-checkin#showMoraleComment' } %></p>
+        <div class="d-none" data-new-checkin-target="moraleComment">
+          <%= f.input :morale_comment, label: false, wrapper: false, input_html: { class: 'form-control mt-2' } %>
+          <p class="form-text mb-0">Only <%= user.managers.any? ? user.managers.map(&:name).to_sentence : 'you' %> will see this answer</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card p-3 mb-3">
+      <div class="card-body">
+        <h2 class="fs-4 mb-3">Let’s review your priorities! 📝</h2>
+        <% if user.checkins.last %>
+          <label class="form-label">Mark last check-in's priorities as complete</label>
+          <% if user.checkins.last.priorities.any? %>
+            <ul class="list-group mb-3">
+              <% user.checkins.last.priorities.each do |priority| %>
+                <%= render 'previous_priority_fields', priority: %>
+              <% end %>
+            </ul>
+          <% else %>
+            <p><em>You didn't add priorities in your last checkin!</em></p>
+          <% end %>
+        <% end %>
+
+        <label class="form-label">What are you planning on accomplishing <%= Time.zone.now.beginning_of_week > Checkin.start_of_current_observation_week ? 'this week' : 'next week' %>? <small class="text-muted"><em>(week of <%= (Checkin.start_of_current_observation_week + 1.week).strftime('%a, %b %e') %>)</em></small> *</label>
+        <div id="priorities">
+          <%= f.simple_fields_for :priorities do |ff| %>
+            <%= render 'priority_fields', form: ff %>
+          <% end %>
+        </div>
+
+        <%= link_to_add_nested f, :priorities, '#priorities', link_text: 'Add another priority', link_classes: 'btn btn-outline-primary btn-sm', tag_attributes: { 'data-new-checkin-target': 'addPriorityLink' } %>
+
+        <p class="form-text mb-0">You priorities will go to your team dashboard!</p>
+      </div>
+    </div>
+
+    <div class="card p-3 mb-3">
+      <div class="card-body">
+        <h2 class="fs-4 mb-3">Let’s answer some quick questions! 🙋</h2>
+
+        <%= f.input :celebration, label: 'Any achievements you are proud of this week? What went well?', hint: 'Your achievements will go to your team dashboard!' %>
+
+        <%= f.input :blockers, label: 'Are you facing any challenges? Need help with anything?', hint: 'Your challenges will go to your team dashboard!' %>
+
+        <label class="form-label">How is your workload at the moment? *</label>
+        <div class="btn-group btn-group-lg d-flex" role="workload-group">
+          <% 7.times do |i| %>
+            <input type="radio" class="btn-check" name="checkin[workload]" required id="workload-<%= i + 1 %>" value="<%= i + 1 %>" autocomplete="off">
+            <label class="btn btn-outline-primary" for="workload-<%= i + 1 %>"><%= i + 1 %></label>
+          <% end %>
+        </div>
+
+        <div class="d-flex justify-content-between">
+          <span>Not enough work</span>
+          <span>Just enough work</span>
+          <span>Too much work</span>
+        </div>
+
+        <p class="form-text mb-0">Only <%= user.managers.any? ? user.managers.map(&:name).to_sentence : 'you' %> will see this answer</p>
+      </div>
+    </div>
+
+    <div class="card p-3 mb-3">
+      <div class="card-body">
+        <h2 class="fs-4">Let's add some 1:1 talking points! 🗣️</h2>
+
+        <% user.managee_relationships.each do |relationship| %>
+          <p class="mt-3 mb-2"><span class="badge bg-secondary">beta</span> Anything you want to talk about in your next 1:1 with <strong><%= relationship.manager.name %></strong>?</p>
+
+          <div id="topics-<%= relationship.id %>">
+            <% relationship.open_topics.each do |topic| %>
+              <%= render 'topics/fields', relationship:, topic:, checkin_form: f %>
+            <% end %>
+          </div>
+
+          <button class="btn btn-outline-primary btn-sm" data-action="new-checkin#addTopic" data-html="<%= ERB::Util.url_encode(render('topics/fields', relationship:, topic: relationship.topics.new, checkin_form: f))%>">Add another talking point</button>
+        <% end %>
+      </div>
+    </div>
+    <% end %>
