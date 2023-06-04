@@ -7,7 +7,7 @@ class RelationshipsController < ApplicationController
 
     @direct_report = @relationship.direct_report
     @latest_checkin = @direct_report.checkins.last
-    @previous_checkin = @latest_checkin.previous_checkin
+    @previous_checkin = @latest_checkin&.previous_checkin
   end
 
   def new
@@ -17,11 +17,13 @@ class RelationshipsController < ApplicationController
 
   def create
     direct_report = find_or_create(email: relationship_params[:user][:email])
-    direct_report.update!(relationship_params[:user])
-
-    current_user.direct_report_relationships.create!(direct_report:)
+    Relationship.create(manager: current_user, direct_report:)
 
     redirect_to root_path
+  end
+
+  def feedback_chat
+
   end
 
   private

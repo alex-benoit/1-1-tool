@@ -11,24 +11,16 @@
     <% end %>
   </p>
 
-  <% if current_user.managers.any? %>
-
-
-    <p class="mb-1">Manager</p>
+  <% if current_user.all_relationships.any? %>
     <ul>
-      <% current_user.manager_relationships.each do |relationship| %>
+      <% current_user.all_relationships.each do |relationship| %>
         <li>
-          <%= link_to relationship.manager.name, relationship_path(relationship) %>
+          <% if relationship.manager == current_user %>
+            <%= link_to relationship.direct_report.name, relationship_path(relationship) %>
+          <% else %>
+            <%= link_to "#{relationship.manager.name} (manager)", relationship_path(relationship) %>
+          <% end %>
         </li>
-      <% end %>
-    </ul>
-  <% end %>
-
-  <% if current_user.direct_reports.any? %>
-    <p class="mb-1">Direct reports (<%= current_user.direct_reports.count %>)</p>
-    <ul>
-      <% current_user.direct_report_relationships.each do |relationship| %>
-        <li><%= link_to relationship.direct_report.name, relationship_path(relationship) %></li>
       <% end %>
     </ul>
   <% end %>

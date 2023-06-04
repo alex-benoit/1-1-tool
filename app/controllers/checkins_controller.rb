@@ -2,6 +2,10 @@
 
 class CheckinsController < ApplicationController
   def new
+    if current_user.feedback_conversation.nil?
+      current_user.set_init_convo
+    end
+
     @checkin = Checkin.new
   end
 

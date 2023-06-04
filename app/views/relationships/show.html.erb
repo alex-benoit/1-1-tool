@@ -2,120 +2,124 @@
 
 <p>Here’s everything you need to know for your 1:1!</p>
 
-<div class="card card-body mb-3">
-  <p class="mb-0">Summary: XYZ</p>
-</div>
-
-<div class="row">
-  <div class="col-12 col-sm-7">
-    <div class="card mb-3">
-      <div class="card-header">
-        ⏪ This past week (XYZ-XYZ)
-      </div>
-      <div class="card-body">
-        <% if @latest_checkin.wins? %>
-          <p class="mb-2">🎉 <%= @latest_checkin.wins %></p>
-        <% end %>
-
-        <% if @previous_checkin&.priorities&.any? %>
-          <p class="mb-0">Past priorities (<%= (@previous_checkin.priorities_completion_rate * 100).round %>% completed)</p>
-          <ul class="list-unstyled mb-0">
-            <% @previous_checkin.priorities.each do |priority| %>
-              <li>
-                <% if priority.completed_at? %>
-                  <i class="fa-regular fa-square-check me-1"></i>
-                <% else %>
-                  <i class="fa-regular fa-square me-1"></i>
-                <% end %>
-                <%= priority.title %>
-              </li>
-            <% end %>
-          </ul>
-        <% end %>
-
-        <% if @latest_checkin.morale? %>
-          <p class="mt-2 mb-0">
-            🫶 Morale: <%= @latest_checkin.morale %>/7 <%= "(Reason: #{@latest_checkin.morale_comment})" if @latest_checkin.morale_comment? %>
-          </p>
-        <% end %>
-      </div>
-      <div class="card-footer">
-        💬 XYZ
-      </div>
-    </div>
-
-    <div class="card mb-3">
-      <div class="card-header">
-        ⏩ This coming week (XYZ-XYZ)
-      </div>
-      <div class="card-body">
-        <% if @latest_checkin.blockers? %>
-          <p class="mb-2">🛑 Stuck: <%= @latest_checkin.blockers %></p>
-        <% end %>
-
-        <p class="mb-0">Current priorities</p>
-        <% if @latest_checkin.priorities.any? %>
-          <ul class="list-unstyled mb-0">
-            <% @latest_checkin.priorities.each do |priority| %>
-              <li>
-                <% if priority.completed_at? %>
-                  <i class="fa-regular fa-square-check me-1"></i>
-                <% else %>
-                  <i class="fa-regular fa-square me-1"></i>
-                <% end %>
-                <%= priority.title %>
-              </li>
-            <% end %>
-          </ul>
-        <% else %>
-          <p class="mb-0"><em>No priorities added</em></p>
-        <% end %>
-
-        <% if @latest_checkin.workload? %>
-          <% case @latest_checkin.workload %>
-          <% when 6..7 %>
-            <% message = 'Too much work' %>
-          <% when 5 %>
-            <% message = 'Slightly too much work' %>
-          <% when 4 %>
-            <% message = 'Just enough work' %>
-          <% when 1..3 %>
-            <% message = 'Not enough work' %>
-          <% end %>
-          <p class="mt-2 mb-0">📚 Workload: <%= @latest_checkin.workload %>/7 (<%= message %>)</p>
-        <% end %>
-      </div>
-      <div class="card-footer">
-        💬 XYZ
-      </div>
-    </div>
+<% if @latest_checkin %>
+  <div class="card card-body mb-3">
+    <p class="mb-0">🤖 AI-generated Summary: <%= @latest_checkin.summary %></p>
   </div>
 
-  <div class="col-12 col-sm-5">
-    <% [:morale, :workload].each do |metric| %>
+  <div class="row">
+    <div class="col-12 col-sm-7">
       <div class="card mb-3">
         <div class="card-header">
-          <%= metric.capitalize %>
+          ⏪ This past week (XYZ-XYZ)
         </div>
         <div class="card-body">
-          <%= line_chart @direct_report.checkins.pluck(:created_at, metric), height: '180px', min: 1, max: 7, xmin: 2.months.ago, xmax: Time.zone.now, library: { clip: false, scales: { y: { ticks: { maxTicksLimit: 7 } } } } %>
+          <% if @latest_checkin.wins? %>
+            <p class="mb-2">🎉 <%= @latest_checkin.wins %></p>
+          <% end %>
+
+          <% if @previous_checkin&.priorities&.any? %>
+            <p class="mb-0">Past priorities (<%= (@previous_checkin.priorities_completion_rate * 100).round %>% completed)</p>
+            <ul class="list-unstyled mb-0">
+              <% @previous_checkin.priorities.each do |priority| %>
+                <li>
+                  <% if priority.completed_at? %>
+                    <i class="fa-regular fa-square-check me-1"></i>
+                  <% else %>
+                    <i class="fa-regular fa-square me-1"></i>
+                  <% end %>
+                  <%= priority.title %>
+                </li>
+              <% end %>
+            </ul>
+          <% end %>
+
+          <% if @latest_checkin.morale? %>
+            <p class="mt-2 mb-0">
+              🫶 Morale: <%= @latest_checkin.morale %>/7 <%= "(Reason: #{@latest_checkin.morale_comment})" if @latest_checkin.morale_comment? %>
+            </p>
+          <% end %>
+        </div>
+        <div class="card-footer">
+          💬 <%= @latest_checkin.past_week_prompt %>
         </div>
       </div>
-    <% end %>
-  </div>
-</div>
 
-<div class="card mb-3">
-  <div class="card-header">
-    🗣️ Talking points
-  </div>
-  <ul class="list-group list-group-flush">
-    <% @relationship.open_topics.includes(:author).each do |topic| %>
-      <%= render 'topic', topic: %>
-    <% end %>
+      <div class="card mb-3">
+        <div class="card-header">
+          ⏩ This coming week (XYZ-XYZ)
+        </div>
+        <div class="card-body">
+          <% if @latest_checkin.blockers? %>
+            <p class="mb-2">🛑 Stuck: <%= @latest_checkin.blockers %></p>
+          <% end %>
 
-    <li class="list-group-item">
-      <a href="#" data-controller>Add talking point</a>
-    </li>
-  </ul>
-</div>
+          <p class="mb-0">Current priorities</p>
+          <% if @latest_checkin.priorities.any? %>
+            <ul class="list-unstyled mb-0">
+              <% @latest_checkin.priorities.each do |priority| %>
+                <li>
+                  <% if priority.completed_at? %>
+                    <i class="fa-regular fa-square-check me-1"></i>
+                  <% else %>
+                    <i class="fa-regular fa-square me-1"></i>
+                  <% end %>
+                  <%= priority.title %>
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p class="mb-0"><em>No priorities added</em></p>
+          <% end %>
+
+          <% if @latest_checkin.workload? %>
+            <% case @latest_checkin.workload %>
+            <% when 6..7 %>
+              <% message = 'Too much work' %>
+            <% when 5 %>
+              <% message = 'Slightly too much work' %>
+            <% when 4 %>
+              <% message = 'Just enough work' %>
+            <% when 1..3 %>
+              <% message = 'Not enough work' %>
+            <% end %>
+            <p class="mt-2 mb-0">📚 Workload: <%= @latest_checkin.workload %>/7 (<%= message %>)</p>
+          <% end %>
+        </div>
+        <div class="card-footer">
+          💬 <%= @latest_checkin.coming_week_prompt %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-5">
+      <% [:morale, :workload].each do |metric| %>
+        <div class="card mb-3">
+          <div class="card-header">
+            <%= metric.capitalize %>
+          </div>
+          <div class="card-body">
+            <%= line_chart @direct_report.checkins.pluck(:created_at, metric), height: '180px', min: 1, max: 7, xmin: 2.months.ago, xmax: Time.zone.now, library: { clip: false, scales: { y: { ticks: { maxTicksLimit: 7 } } } } %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header">
+      🗣️ Talking points
+    </div>
+    <ul class="list-group list-group-flush">
+      <% @relationship.open_topics.includes(:author).each do |topic| %>
+        <%= render 'topic', topic: %>
+      <% end %>
+
+      <li class="list-group-item">
+        <a href="#" data-controller>Add talking point</a>
+      </li>
+    </ul>
+  </div>
+<% else %>
+  <em>No check-ins yet</em>
+<% end %>
