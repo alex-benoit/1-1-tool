@@ -8,6 +8,7 @@ class SaveCheckin
     mark_previous_priorities_as_complete
     save_priorities
     update_duologue_topics
+    generate_ai_suggested_prompts
   end
 
   private
@@ -24,7 +25,7 @@ class SaveCheckin
 
   def mark_previous_priorities_as_complete
     context.checkin_params[:previous_priorities_attributes]&.each do |id, attributes|
-      context.checkin.previous_checkin.priorities.find(id).update(completed: attributes[:completed])
+      context.checkin.previous_checkin.priorities.find(id).update(completed_at: attributes[:completed] == 'true' ? Time.zone.now : nil)
     end
   end
 
@@ -54,5 +55,9 @@ class SaveCheckin
     else
       relationship.topics.create(title: params[:title], author: context.user)
     end
+  end
+
+  def generate_ai_suggested_prompts
+    GenerateAiSuggestedPrompt.call(checkin: context.checkin)
   end
 end

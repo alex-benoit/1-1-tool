@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_04_071858) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_04_145609) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -23,6 +23,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_04_071858) do
     t.integer "workload"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "summary"
+    t.string "past_week_prompt"
+    t.string "coming_week_prompt"
     t.index ["user_id"], name: "index_checkins_on_user_id"
   end
 
@@ -51,9 +54,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_04_071858) do
     t.bigint "relationship_id", null: false
     t.datetime "completed_at"
     t.datetime "archived_at"
-    t.bigint "author_id", null: false
+    t.bigint "author_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "ai_suggested", default: false
     t.index ["author_id"], name: "index_topics_on_author_id"
     t.index ["relationship_id"], name: "index_topics_on_relationship_id"
   end

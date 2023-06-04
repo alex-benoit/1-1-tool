@@ -10,7 +10,7 @@
         <div class="card-body">
           <label class="form-label fs-5">How did you feel at work this week? *</label>
 
-          <div class="btn-group d-flex" role="morale-group">
+          <div class="btn-group btn-group-lg d-flex" role="morale-group">
             <% 7.times do |i| %>
               <input type="radio" class="btn-check" name="checkin[morale]" required id="morale-<%= i + 1 %>" value="<%= i + 1 %>" autocomplete="off">
               <label class="btn btn-outline-primary" for="morale-<%= i + 1 %>"><%= i + 1 %></label>
@@ -62,7 +62,7 @@
           <%= f.input :blockers, label: 'Are you running into any blockers?', input_html: { rows: 1 } %>
 
           <label class="form-label">How is your workload at the moment? *</label>
-          <div class="btn-group d-flex" role="workload-group">
+          <div class="btn-group btn-group-lg d-flex" role="workload-group">
             <% 7.times do |i| %>
               <input type="radio" class="btn-check" name="checkin[workload]" required id="workload-<%= i + 1 %>" value="<%= i + 1 %>" autocomplete="off">
               <label class="btn btn-outline-primary" for="workload-<%= i + 1 %>"><%= i + 1 %></label>
@@ -85,12 +85,12 @@
             <p class="mt-3 mb-2">Anything you want to talk about in your next 1:1 with <strong><%= relationship.manager.name %></strong>?</p>
 
             <div id="topics-<%= relationship.id %>">
-              <% relationship.topics.each do |topic| %>
+              <% relationship.open_topics.each do |topic| %>
                 <%= render 'topics_fields', relationship:, topic:, checkin_form: f %>
               <% end %>
             </div>
 
-            <button class="btn btn-outline-primary btn-sm" data-action="new-checkin#appendHtml" data-model="topic" data-html="<%= ERB::Util.url_encode(render('topics/fields', relationship:, topic: relationship.topics.new, checkin_form: f))%>">Add another talking point</button>
+            <button class="btn btn-outline-primary btn-sm" data-action="new-checkin#appendHtml" data-model="topic" data-html="<%= ERB::Util.url_encode(render('topics_fields', relationship:, topic: relationship.topics.new, checkin_form: f))%>">Add another talking point</button>
           <% end %>
         </div>
       </div>

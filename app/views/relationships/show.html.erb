@@ -18,7 +18,7 @@
         <% end %>
 
         <% if @previous_checkin&.priorities&.any? %>
-          <p class="mb-0">Past priorities (<%= (@previous_checkin.priorities.where.not(completed_at: nil).count.fdiv(@previous_checkin.priorities.count) * 100).round %>% completed)</p>
+          <p class="mb-0">Past priorities (<%= (@previous_checkin.priorities_completion_rate * 100).round %>% completed)</p>
           <ul class="list-unstyled mb-0">
             <% @previous_checkin.priorities.each do |priority| %>
               <li>

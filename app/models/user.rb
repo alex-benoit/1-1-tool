@@ -17,4 +17,12 @@ class User < ApplicationRecord
   has_many :topics, dependent: :destroy, foreign_key: 'author_id', inverse_of: :author
 
   validates :name, :email, presence: true
+
+  def average(field)
+    checkins.where(created_at: 2.months.ago..Time.zone.now).average(field).round(2)
+  end
+
+  def all_relationships
+    Relationship.where(manager: self).or(Relationship.where(direct_report: self))
+  end
 end
